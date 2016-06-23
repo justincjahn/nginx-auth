@@ -3,6 +3,7 @@
   <head>
     <title>Please Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
@@ -30,7 +31,7 @@
           </div>
 
           <div class="pure-controls">
-            <input type="hidden" name="request_uri" value="" />
+            <input type="hidden" id="nginx-auth-request_uri" name="request_uri" value="" />
             <button class="pure-button pure-input-1-2 pure-button-primary" id="form-login-submit">
               <i class="fa fa-lock"></i>
               Login
@@ -42,7 +43,7 @@
 
     <script type="text/javascript" lang="javascript">
       (function (){
-        document.querySelector('input[name=request_uri]').value = window.location.href;
+        document.getElementById('nginx-auth-request_uri').value = window.location.href;
       })();
     </script>
   </body>

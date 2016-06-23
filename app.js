@@ -257,6 +257,11 @@ module.exports = app;
     groups        = groups || [''];
     user.memberOf = user.memberOf || ['NO_GROUPS'];
 
+    if (groups.length == 1 && groups[0] === '') {
+      debug('AUTHZ: Authorization granted due to empty group list.');
+      return true;
+    }
+
     // Loop through each of the member's groups
     for (var i = 0; i < user.memberOf.length; i++) {
       var userGroup = user.memberOf[i].toLowerCase();
