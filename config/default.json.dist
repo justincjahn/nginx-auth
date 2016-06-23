@@ -1,0 +1,26 @@
+{
+  "port":         3000,
+  "basePath":     "/auth",                  // Base URL of the site.  Cannot contain a trailing slash.
+  "redirectPath": "/",                      // Path to redirect to if the browser did not provide a valid location.
+
+  "redirectDomains": [                      // A list of authorized domain names that the script will allow redirection to.
+    "localhost",                            // If an attacker tries to spoof the form and redirect a user elsewhere it will
+    "127.0.0.1",                            // be blocked by this list, and the redirectPath will be used instead.
+    "mydomain.tld"
+  ],
+
+  "ldap": {
+    "bindDN":       "DC=domain,DC=tld",     // Base path to search for users
+    "bindUser":     "binduser@domain.tld",  // Initial user that connects to LDAP.  Doesn't need special privileges.
+    "bindPassword": "password",
+
+    "groups":       [                       // A list of group memberships that are authorized to access.  Case insensitive.
+      ""                                    // By default everyone authenticated is allowed in.
+    ]
+  },
+
+  "logging": {
+    "format": "dev",                        // Morgan logging method.
+    "skip":   false                         // If logging should be disabled.
+  }
+}

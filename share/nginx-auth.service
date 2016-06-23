@@ -1,0 +1,23 @@
+[Unit]
+Description=Web-based LDAP authentication using NGINX auth_request.
+Wants=network-online.target
+After=network.target network-online.target
+
+[Service]
+WorkingDirectory=/opt/nginx-auth
+ExecStart=/usr/local/bin/node /opt/nginx-auth/bin/server
+
+Restart=always
+RestartSec=10                       # Restart service after 10 seconds if node service crashes
+
+StandardOutput=syslog               # Output to syslog
+StandardError=syslog                # Output to syslog
+SyslogIdentifier=nginx-auth
+
+User=nginx-auth
+Group=nginx-auth
+
+Environment=NODE_ENV=production PORT=3000
+
+[Install]
+WantedBy=multi-user.target

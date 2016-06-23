@@ -1,0 +1,47 @@
+{
+  "name":        "nginx-auth",
+  "version":     "0.1.0",
+  "description": "An Enterprise authentication wrapper for NGINX ngx_http_auth_request_module.",
+  "author":      "Justin Jahn <justin@justinjahn.me",
+  "license":     "MIT",
+
+  "scripts": {
+    
+  },
+
+  "main": "app.js",
+
+  "repository": {
+    "type": "git",
+    "url":  "https://github.com/justinjahn/nginx-auth.git"
+  },
+
+  "bugs": {
+    "url": "https://github.com/justinjahn/nginx-auth/issues"
+  },
+
+  "keywords": [
+    "nginx",
+    "auth",
+    "ldap",
+    "auth_request"
+  ],
+
+  "devDependencies": {
+    "jsdoc":  "*"    
+  },
+
+  "dependencies": {
+    "express":              "*",
+    "express-session":      "*",
+    "express-handlebars":   "*",
+    "passport":             "*",
+    "passport-local":       "*",
+    "body-parser":          "*",
+    "node-sass-middleware": "*",
+    "config":               "*",
+    "ldapjs":               "*",
+    "node-uuid":            "*",
+    "forever":              "*"
+  }
+}

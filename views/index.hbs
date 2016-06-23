@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Please Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <link rel="stylesheet" href="{{{base '/css/site.css'}}}">
+  </head>
+
+  <body>
+    <main class="main login" id="main">
+      {{#if error}}<div id="message" class="error center"><p>{{error}}</div>{{/if}}
+
+      <form class="pure-form pure-form-aligned" id="form-login" method="POST" action="{{{base '/'}}}">
+        <fieldset>
+          <div class="lg-center">
+            <p>Please use your Active Directory or LDAP credentials to login.</p>
+          </div>
+
+          <div class="pure-control-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" placeholder="username or email">
+          </div>
+
+          <div class="pure-control-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="password">
+          </div>
+
+          <div class="pure-controls">
+            <input type="hidden" name="request_uri" value="" />
+            <button class="pure-button pure-input-1-2 pure-button-primary" id="form-login-submit">
+              <i class="fa fa-lock"></i>
+              Login
+            </button>
+          </div>
+        </fieldset>
+      </form>
+    </main>
+
+    <script type="text/javascript" lang="javascript">
+      (function (){
+        document.querySelector('input[name=request_uri]').value = window.location.href;
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,61 @@
+master_process off;
+daemon         off;
+
+error_log /dev/stdout debug;
+
+events { }
+
+http {
+  upstream forward {
+    server 127.0.0.1:8081;
+  }
+
+  server {
+    listen 127.0.0.1:8081;
+    root /home/nginx-auth/nginx-auth/test/www;
+
+    location / {
+      try_files $uri /index.html;
+    }
+  }
+
+  server {
+    listen 127.0.0.1:8080;
+    
+    # If the auth check fails, rewrite the uri, and send it to the /auth endpoint
+    error_page 401 403 =302 @auth_redir;
+    location @auth_redir {
+      rewrite ^ /auth/$scheme://$host:$server_port$uri;
+    }
+
+    location /auth/check {
+      internal;
+      proxy_pass http://127.0.0.1:3000;
+      proxy_pass_request_body off;
+      proxy_set_header Content-Length "";
+      proxy_set_header Host $http_host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $scheme;
+    }
+    
+    location /auth {
+      proxy_pass http://127.0.0.1:3000;
+      proxy_set_header Host $http_host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location / {
+      # Performs the authentication check
+      auth_request /auth/check;
+
+      # Only enable if your NGINX was compiled with the sub module.
+      sub_filter '</head>' '<script type="text/javascript" lang="javascript" src="/auth/js/banner.js"></script></head>';
+
+      # Pass the request to the upstream servers
+      proxy_pass http://forward;
+    }
+  }
+}

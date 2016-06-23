@@ -1,0 +1,105 @@
+/*------------
+1. VARIABLES
+--------------*/
+
+  $color-font-primary:   #333333;
+  $color-font-secondary: #999999;
+  $color-font-success:   rgb(28, 184, 65);
+  $color-font-error:     rgb(202, 60, 60);
+  $color-font-warning:   rgb(223, 117, 20);
+
+  $color-background: #FCFCFC;
+  $color-accent1:    #AAAAAA;
+  $color-accent2:    #FCFCFC;
+
+/*------------
+2. STYLING
+------------*/
+
+  body {
+    background-color: $color-background;
+  }
+
+  /* PURE BUTTONS */
+  .button-success, .button-error, .button-warning, .button-secondary {
+    color:         #FFF;
+    border-radius: 4px;
+    text-shadow:   0 1px 1px rgba(0, 0, 0, 0.2);
+  }
+
+  .button-success { background: $color-font-success; }
+  .button-error { background: $color-font-error; }
+  .button-warning { background: $color-font-warning; }
+  .button-secondary { background: rgb(66, 184, 221); }
+
+/*------------
+3. LAYOUT
+--------------*/
+
+  h1.notice {
+    font-size: 1.2em;
+    margin: 100px auto;
+    text-align: center;
+  }
+
+  main.main {
+    display: block;
+    margin:  0 30px;
+  }
+
+  header.main {
+    display: block;
+    margin:  0px 30px;
+
+    p {
+      padding:    0px 15px;
+      text-align: center;
+
+      color:       $color-font-primary;
+      font-style:  italic;
+      font-weight: 200;
+    }
+  }
+
+  /* LOGIN */
+  .login {
+    width:       100%;
+    padding-top: 10px;
+
+    div.error, div.success {
+      margin: 1em;
+    }
+
+    div.error p {
+      padding: 1.2em 0;
+      color:            $color-font-error;
+      background-color: lighten($color-font-error, 40%);
+      border-radius:    .3em;
+      border:           1px solid $color-font-error;
+    }
+
+    div.success p {
+      padding: 1.2em 0;
+      color:            $color-font-success;
+      background-color: lighten($color-font-success, 50%);
+      border-radius:    .3em;
+      border:           1px solid $color-font-success;
+    }
+
+    form {
+      display: table;
+      margin: 0px auto;
+    }
+  }
+
+  /* MISC. */
+  .right { text-align: right; }
+  .center { text-align: center; }
+
+  .lg-center {
+    text-align: center;
+
+    @media only screen and(max-width: 760px) {
+      text-align: left;
+    }
+  }
