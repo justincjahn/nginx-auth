@@ -1,8 +1,8 @@
 {
   "name":        "nginx-auth",
   "version":     "0.1.0",
-  "description": "An Enterprise authentication wrapper for NGINX ngx_http_auth_request_module.",
-  "author":      "Justin Jahn <justin@justinjahn.me",
+  "description": "Web-based LDAP authentication and authorization for NGINX ngx_http_auth_request_module.",
+  "author":      "Justin Jahn <justin@justinjahn.me>",
   "license":     "MIT",
 
   "scripts": {
