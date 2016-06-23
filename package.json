@@ -42,6 +42,6 @@
     "config":               "*",
     "ldapjs":               "*",
     "node-uuid":            "*",
-    "forever":              "*"
+    "debug":                "*"
   }
 }

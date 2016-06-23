@@ -11,7 +11,7 @@ NGINX must be compiled with ngx_http_auth_request_module, and optionally the sub
 by default in [NGINX's Repository](http://nginx.org/en/linux_packages.html).  The node.js packages are
 found in the [EPEL repository](https://fedoraproject.org/wiki/EPEL) for Redhat-based systems:
 
-    sudo yum install nginx nodejs
+    sudo yum install nginx nodejs npm
 
 ### 2. Create an unpriveleged user
 
@@ -21,7 +21,7 @@ found in the [EPEL repository](https://fedoraproject.org/wiki/EPEL) for Redhat-b
 
     sudo su - # Unless non-root users have access to the home directory.
     cd /home/nginx-auth
-    sudo -u nginx-auth -H git clone git@github.com:justinjahn/nginx-auth.git
+    sudo -u nginx-auth -H git clone https://github.com/justinjahn/nginx-auth.git
 
 ### 4. Installing NPM Packages
 
@@ -30,12 +30,12 @@ found in the [EPEL repository](https://fedoraproject.org/wiki/EPEL) for Redhat-b
 
 ### 4. Copy and edit the configuration file
 
-    sudo -u nginx-auth -H cp config/config.json.dist config/config.json
-    sudo -u nginx-auth -H vi config/config.json
+    sudo -u nginx-auth -H cp config/default.json.dist config/default.json
+    sudo -u nginx-auth -H vi config/default.json
 
 ### 5. Copy the nginx-auth systemd service file
 
-    sudo cp nginx-auth-ldap/share/nginx-auth.service /etc/systemd/system/nginx-auth.service
+    sudo cp share/nginx-auth.service /etc/systemd/system/nginx-auth.service
 
 ### 6. Enable and start the application
 
