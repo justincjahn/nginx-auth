@@ -266,7 +266,7 @@ module.exports = app;
       for (var x = 0; x < groups.length; x++) {
         var configGroup = groups[x].toLowerCase();
 
-        if (userGroup.includes(configGroup)) {
+        if (userGroup.indexOf(configGroup) > 0) {
           debug("AUTHZ: Success for " + user.username);
           return true;
         }
