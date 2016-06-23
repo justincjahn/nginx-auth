@@ -384,7 +384,7 @@ module.exports = app;
     debug('Destroying authentication credentials.');
 
     req.logout();
-    res.redirect(config.basePath);
+    res.redirect(config.redirectPath);
   });
 
   // Either authenticate the user, or present them with the authentication page.
