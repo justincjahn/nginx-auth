@@ -158,13 +158,7 @@ module.exports = app;
     }
 
     // Create the LDAP server and connect
-    var ldap = null
-    try {
-      ldap = ldapjs.createClient({ url: config.ldap.serverURI, tlsOptions: config.ldap.tlsOptions });
-      ldap.connect();
-    } catch (e) {
-      return callback('findUser: ' + e);
-    }
+    var ldap = ldap = ldapjs.createClient({ url: config.ldap.serverURI, tlsOptions: config.ldap.tlsOptions });
 
     // Generate an LDAP filter for sAMAccountName, email, userPrincipalName
     var filter = new ldapjs.OrFilter({
@@ -186,42 +180,50 @@ module.exports = app;
       ]
     });
 
-    // Bind as our bindUser and bindPassword from the config
-    ldap.bind(config.ldap.bindUser, config.ldap.bindPassword, function (err) {
-      if (err) {
-        return callback(err, null);
-      }
-
-      // Configuration for the search
-      var options = {
-        scope: 'sub',
-        filter: filter,
-        attributes: ['dn', 'givenName', 'sn', 'cn', 'mail', 'memberOf']
-      };
-
-      // The return data is added here
-      var rows = [];
-
-      // Begin the search
-      ldap.search(config.ldap.bindDN, options, function (err, ldapevent) {
+    // LDAPJS uses events to notify when we're connected
+    ldap.once("connect", function() {
+      // Bind as our bindUser and bindPassword from the config
+      ldap.bind(config.ldap.bindUser, config.ldap.bindPassword, function (err) {
         if (err) {
           return callback(err, null);
         }
 
-        ldapevent.on('searchEntry', function (entry) {
-          rows.push(entry.object);
-        });
+        // Configuration for the search
+        var options = {
+          scope: 'sub',
+          filter: filter,
+          attributes: ['dn', 'givenName', 'sn', 'cn', 'mail', 'memberOf']
+        };
 
-        ldapevent.on('error', function (err) {
-          ldap.unbind();
-          callback(err, null);
-        });
+        // The return data is added here
+        var rows = [];
 
-        ldapevent.on('end', function (err) {
-          ldap.unbind();
-          callback(false, rows);
+        // Begin the search
+        ldap.search(config.ldap.bindDN, options, function (err, ldapevent) {
+          if (err) {
+            return callback(err, null);
+          }
+
+          ldapevent.on('searchEntry', function (entry) {
+            rows.push(entry.object);
+          });
+
+          ldapevent.on('error', function (err) {
+            ldap.unbind();
+            callback(err, null);
+          });
+
+          ldapevent.on('end', function (err) {
+            ldap.unbind();
+            callback(false, rows);
+          });
         });
       });
+    });
+
+    // Something happened that caused an error
+    ldap.once("error", function(err) {
+      callback(err, null);
     });
   };
 
@@ -259,24 +261,26 @@ module.exports = app;
     }
 
     // Create the LDAP server and connect
-    var ldap = null
-    try {
-      ldap = ldapjs.createClient({ url: config.ldap.serverURI, tlsOptions: config.ldap.tlsOptions });
-      ldap.connect();
-    } catch (e) {
-      return callback('findUser: ' + e);
-    }
+    var ldap = ldapjs.createClient({ url: config.ldap.serverURI, tlsOptions: config.ldap.tlsOptions });
 
-    // Bind as the user provided in the params
-    ldap.bind(user.dn, password, function (err) {
-      // There was some error binding.  This may be a server error, or an invalid set of credentials.
-      if (err) {
-        return callback(err, false);
-      }
+    // LDAPJS used the connect event to notify when the connection is established
+    ldap.once("connect", function() {
+      // Bind as the user provided in the params
+      ldap.bind(user.dn, password, function (err) {
+        // There was some error binding.  This may be a server error, or an invalid set of credentials.
+        if (err) {
+          return callback(err, false);
+        }
 
-      // The process was a success
-      ldap.unbind();
-      return callback(false, true);
+        // The process was a success
+        ldap.unbind();
+        return callback(false, true);
+      });
+    });
+
+    // An error has occurred that must be handled
+    ldap.once("error", function(err){
+      return callback(err, false);
     });
   };
 
