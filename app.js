@@ -138,7 +138,7 @@ module.exports = app;
     }
 
     // Create the LDAP server and connect
-    var ldap = ldapjs.createClient({ url: 'ldap://dccent1.uconnect.local' });
+    var ldap = ldapjs.createClient({ url: config.ldap.server });
     ldap.connect();
 
     // Generate an LDAP filter for sAMAccountName, email, userPrincipalName
@@ -230,7 +230,7 @@ module.exports = app;
     }
 
     // Create the LDAP server and connect
-    var ldap = ldapjs.createClient({ url: 'ldap://dccent1.uconnect.local' });
+    var ldap = ldapjs.createClient({ url: config.ldap.server });
     ldap.connect();
 
     // Bind as the user provided in the params

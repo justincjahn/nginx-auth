@@ -10,6 +10,7 @@
   ],
 
   "ldap": {
+    "server":       "dc.domain.tld",        // The server to send LDAP queries to.
     "bindDN":       "DC=domain,DC=tld",     // Base path to search for users
     "bindUser":     "binduser@domain.tld",  // Initial user that connects to LDAP.  Doesn't need special privileges.
     "bindPassword": "password",
