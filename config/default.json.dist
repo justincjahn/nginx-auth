@@ -10,14 +10,21 @@
   ],
 
   "ldap": {
-    "server":       "dc.domain.tld",        // The server to send LDAP queries to.
+    "serverURI":    "ldap://dc.domain.tld", // The server to send LDAP queries to.
     "bindDN":       "DC=domain,DC=tld",     // Base path to search for users
     "bindUser":     "binduser@domain.tld",  // Initial user that connects to LDAP.  Doesn't need special privileges.
     "bindPassword": "password",
 
     "groups":       [                       // A list of group memberships that are authorized to access.  Case insensitive.
       ""                                    // By default everyone authenticated is allowed in.
-    ]
+    ],
+
+    "tlsOptions":   {
+      "rejectUnauthorized": true,          // Set this to false to ignore TLS/SSL certificate errors.
+      "ca": [                              // A list of certificate files to use when validating TLS/SSL
+        // "/path/to/root.crt"
+      ]
+    }
   },
 
   "logging": {

@@ -28,6 +28,7 @@ var path               = require('path'),
     uuid               = require('node-uuid'),
     ldapjs             = require('ldapjs'),
     debug              = require('debug')('nginx-auth'),
+    fs                 = require('fs'),
     app                = express(),
     router             = express.Router();
 
@@ -37,6 +38,21 @@ global.basePath = app.basePath = path.resolve(__dirname);
 // Set the NODE_ENV variable if it isn't set
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 var bDevelopment = process.env.NODE_ENV.toLowerCase() === 'development';
+
+// Handle SSL/TLS Certificates
+if (config.ldap.tlsOptions.ca.length > 0) {
+  var certificates = [];
+
+  config.ldap.tlsOptions.ca.forEach(function(element) {
+    try {
+      certificates += fs.readFileSync(element);
+    } catch (e) {
+      debug('config.ldap.tlsOptions.ca: File not found: ' + element);
+    }
+  }, this);
+
+  config.ldap.tlsOptions.ca = certificates;
+}
 
 // Export the app object for other files to require()
 module.exports = app;
@@ -137,9 +153,18 @@ module.exports = app;
       throw 'findUser: `callback` param must be a function.';
     }
 
+    if (config.ldap.serverURI.indexOf('ldap') !== 0) {
+      return callback('findUser: `config.ldap.serverURI` must have a URI of ldap:// or ldaps://');
+    }
+
     // Create the LDAP server and connect
-    var ldap = ldapjs.createClient({ url: config.ldap.server });
-    ldap.connect();
+    var ldap = null
+    try {
+      ldap = ldapjs.createClient({ url: config.ldap.serverURI, tlsOptions: config.ldap.tlsOptions });
+      ldap.connect();
+    } catch (e) {
+      return callback('findUser: ' + e);
+    }
 
     // Generate an LDAP filter for sAMAccountName, email, userPrincipalName
     var filter = new ldapjs.OrFilter({
@@ -229,9 +254,18 @@ module.exports = app;
       throw 'authn: `callback` param must be a function.';
     }
 
+    if (config.ldap.serverURI.indexOf('ldap') !== 0) {
+      return callback('authn: `config.ldap.serverURI` must have a URI of ldap:// or ldaps://', false);
+    }
+
     // Create the LDAP server and connect
-    var ldap = ldapjs.createClient({ url: config.ldap.server });
-    ldap.connect();
+    var ldap = null
+    try {
+      ldap = ldapjs.createClient({ url: config.ldap.serverURI, tlsOptions: config.ldap.tlsOptions });
+      ldap.connect();
+    } catch (e) {
+      return callback('findUser: ' + e);
+    }
 
     // Bind as the user provided in the params
     ldap.bind(user.dn, password, function (err) {
@@ -335,6 +369,7 @@ module.exports = app;
   app.post(config.basePath, bodyParser.urlencoded({ extended: true }), function (req, res, next) {
     passport.authenticate('local', function (err, user, info) {
       if (err || !user) {
+        if (!info) { info = {}; }
         return res.render('index', { error: info.message || 'Invalid username or password!' });
       }
 
