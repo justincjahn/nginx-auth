@@ -28,22 +28,32 @@ found in the [EPEL repository](https://fedoraproject.org/wiki/EPEL) for Redhat-b
     cd /home/nginx-auth/nginx-auth
     sudo -u nginx-auth -H npm install
 
-### 4. Copy and edit the configuration file
+### 5. Copy and edit the configuration file
 
     sudo -u nginx-auth -H cp config/default.json.dist config/default.json
     sudo -u nginx-auth -H vi config/default.json
 
-### 5. Copy the nginx-auth systemd service file
+### 6. Copy the nginx-auth systemd service file
 
     sudo cp share/nginx-auth.service /etc/systemd/system/nginx-auth.service
 
-### 6. Enable and start the application
+### 7. Enable and start the application
 
     sudo systemctl enable nginx-auth
-    sydo systemctl start nginx-auth
+    sudo systemctl start nginx-auth
 
-### 7. Configuring NGINX
+### 8. Configuring NGINX
 
 Configuring NGINX is outside the scope of this package, however the `test/nginx.conf.dist` file provides
 an excellent starting point, including all of the necessary configuration to get nginx-auth set up to
 authenticate a full website running alongside it.
+
+## Updating
+
+The software is pretty simple to update:
+
+    cd /home/nginx-auth/nginx-auth
+    sudo -u nginx-auth -H git pull
+
+Compare your `config/default.json` to the new version's `config/default.json.dist` to ensure no config
+settings are missing.
